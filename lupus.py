@@ -48,7 +48,7 @@ class Player():
         self.can_power=-1
 
     def use_special(self):
-        self.special_power=0
+        self.special_power-=1
 
     def set_status(self,status):
         if status in ['alive','dead','victim']: #add here other valid status
@@ -152,9 +152,11 @@ def save(bot,update,args):
                     if i.name==saved:
                         if i.name==name:
                             if player.special_power>0:
-                                player.special_power--
+                                player.use_special()
                                 bot.send_message(chat_id=update.message.chat_id,text='Ti sei salvato da solo, non potrai più farlo durante la partita')
-                            else: bot.send_message(chat_id=update.message.chat_id,text="Puoi salvarti da solo una sola volta scegli un altro giocatore") return
+                            else: 
+                                bot.send_message(chat_id=update.message.chat_id,text="Puoi salvarti da solo una sola volta scegli un altro giocatore")
+                                return
                         if i.status=='victim':
                             i.set_status('alive')
                         bot.send_message(chat_id=update.message.chat_id,text='Hai scelto la persona da proteggere, torna a dormire')
