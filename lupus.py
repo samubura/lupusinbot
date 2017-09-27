@@ -261,8 +261,8 @@ def menu(bot,update): #resetta le variabili globali
         can_join=1
     else: bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
                      text='Seleziona un''opzione dal menù di aiuto')
-                     _help(bot,update)
-def _help(bot,update):
+                     help(bot,update)
+def help(bot,update):
     kb = [
     [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
     [telegram.InlineKeyboardButton('Come si gioca?',callback_data='faq')]
