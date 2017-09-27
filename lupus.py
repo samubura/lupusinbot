@@ -22,19 +22,19 @@ role_list=[]
 #variabili stato gioco
 role_index=0
 can_join=0
-wait=1
 night=True
 
 #definizioni classi
 class Player():
     """Player entity"""
-    def __init__(self, name, chat_id, role=None, status='alive',vote=0, can_power=0):
+    def __init__(self, name, chat_id, role=None, status='alive',vote=0, can_power=0,special_power=0):
         self.name = name
         self.chat_id = chat_id
         self.role = role
         self.status = status
         self.vote = vote
         self.can_power=can_power
+        self.special_power=special_power
 
     def wake(self):
         if self.can_power==0:
@@ -46,6 +46,9 @@ class Player():
 
     def end_power(self):
         self.can_power=-1
+
+    def use_special(self):
+        self.special_power=0
 
     def set_status(self,status):
         if status in ['alive','dead','victim']: #add here other valid status
@@ -130,6 +133,8 @@ def start_match(bot):
     for p in player_list:
         if p.role=='lupo':
             wolf_list.append(p)
+        elif p.role in ['protettore','assassino']
+            p.special_power=1
     if len(wolf_list)==1:
         bot.send_message(chat_id=wolf_list[0].chat_id,text='Sei un lupo solitario!')
     else:
@@ -254,15 +259,24 @@ def menu(bot,update): #resetta le variabili globali
         bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
                          text='Ho creato un nuovo villaggio. Invia un messaggio privato a @lupusinbot con scritto /join per entrare.\nQuando tutti sono entrati scrivi /settings per impostare i ruoli')
         can_join=1
-    else:
-        kb = [
-        [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
-        [telegram.InlineKeyboardButton('Come giocare?',callback_data='faq'),telegram.InlineKeyboardButton('<<<Indietro',callback_data='indietro')]
-        ]
-        kb_markup = telegram.InlineKeyboardMarkup(kb)
-        bot.edit_message_text(chat_id=update.callback_query.message.chat_id, message_id=update.callback_query.message.message_id,  #OK
-                         text='Come posso aiutarti?', reply_markup=kb_markup)
-                         #aggiungere markup menu help
+    else: bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
+                     text='Seleziona un''opzione dal menù di aiuto')
+                     _help(bot,update)
+def _help(bot,update):
+    kb = [
+    [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
+    [telegram.InlineKeyboardButton('Come si gioca?',callback_data='faq')]
+    ]
+    kb_markup = telegram.InlineKeyboardMarkup(kb)
+    bot.send_message(chat_id=update.callback_query.message.chat_id,text='Come posso aiutarti?', reply_markup=kb_markup)
+def helpmenu(bot,update):
+    data=update.callback_query.data
+    if data=='ruoli':
+        bot.send_message(chat_id=update.callback_query.message.chat_id, text='RUOLI\n[in espansione..]')
+    elif data=='comandi':
+        bot.send_message(chat_id=update.callback_query.message.chat_id, text='COMANDI\n[in espansione..]')
+    elif data=='faq':
+        bot.send_message(chat_id=update.callback_query.message.chat_id, text='COME SI GIOCA\n[in espansione..]')
 def createPlayer(bot,update):
     #creating a new player
     global player_list
@@ -328,6 +342,8 @@ def button_mixer(bot,update):
         menu(bot,update)
     elif data in ['lupo','veggente','protettore','contadino']:
         ruoli(bot,update)
+    elif data in ['ruoli','comandi','faq']:
+        menu(bot,update)
     elif data=='play': start_match(bot)
 
 
@@ -359,4 +375,3 @@ updater.start_webhook(listen="0.0.0.0",
                     port=PORT,
                     url_path=TOKEN)
 updater.idle()
-print('WORKING')
