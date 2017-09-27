@@ -110,12 +110,60 @@ def burn(bot,update,args):
 
 #Altri poteri
 def see(bot,update,args):
-    print('ok')
-    go_sleep(bot)
+    if night:
+        if update.message.chat.type=='group':
+            bot.send_message(chat_id=update.message.chat_id,text='Puoi usare questo comando solo come messaggio privato a @lupusinbot')
+            return
+        name=update.message.from_user.first_name
+        if len(args)==0:
+            bot.send_message(chat_id=update.message.chat_id,text='Devi scrivere il nome del giocatore che vuoi esaminare /see <name>')
+            return
+        examined=args[0]
+        for player in player_list:
+            if player.name==name and player.role=='veggente' and player.can_power==1:
+                for i in player_list:
+                    if i.name==examied:
+                        if i.role=='lupo':
+                            mex_text=name +' è un lupo!'
+                            bot.send_message(chat_id=update.message.chat_id,text=mex_text)
+                        else:
+                            mex_text=name +'non è un lupo.'
+                            bot.send_message(chat_id=update.message.chat_id,text=mex_text)
+                        go_sleep(bot)
+                        return
+                bot.send_message(chat_id=update.message.chat_id,text='Il giocatore non è nella lista')
+                return
+        bot.send_message(chat_id=update.message.chat_id,text='Non sei autorizzato ad usare questo comando')
+    else: bot.send_message(chat_id=update.message.chat_id,text='Puoi usare questo potere solo di notte')
 def save(bot,update,args):
-    print('ok')
-    go_sleep(bot)
-
+    global player_list
+    if night:
+        if update.message.chat.type=='group':
+            bot.send_message(chat_id=update.message.chat_id,text='Puoi usare questo comando solo come messaggio privato a @lupusinbot')
+            return
+        name=update.message.from_user.first_name
+        if len(args)==0:
+            bot.send_message(chat_id=update.message.chat_id,text='Devi scrivere il nome del giocatore che vuoi proteggere /save <name>')
+            return
+        saved=args[0]
+        for player in player_list:
+            if player.name==name and player.role=='protettore' and player.can_power==1:
+                for i in player_list:
+                    if i.name==saved:
+                        if i.name==name:
+                            if player.special_power>0:
+                                player.special_power--
+                                bot.send_message(chat_id=update.message.chat_id,text='Ti sei salvato da solo, non potrai più farlo durante la partita')
+                            else: bot.send_message(chat_id=update.message.chat_id,text="Puoi salvarti da solo una sola volta scegli un altro giocatore") return
+                        if i.status=='victim':
+                            i.set_status('alive')
+                        bot.send_message(chat_id=update.message.chat_id,text='Hai scelto la persona da proteggere, torna a dormire')
+                        go_sleep(bot)
+                        return
+                bot.send_message(chat_id=update.message.chat_id,text='Il giocatore non è nella lista')
+                return
+        bot.send_message(chat_id=update.message.chat_id,text='Non sei autorizzato ad usare questo comando')
+    else: bot.send_message(chat_id=update.message.chat_id,text='Puoi usare questo potere solo di notte')
 
 #funzioni principali per il gioco
 def start_match(bot):
@@ -176,7 +224,7 @@ def go_sleep(bot):
     role=role_list[role_index]
     if role=='lupo': bot.send_message(chat_id=group_id,text='I lupi hanno scelto la loro vittima e tornano a dormire')
     elif role=='veggente': bot.send_message(chat_id=group_id,text='Il veggente usa il suo potere e torna a dormire')
-    elif role=='protettore': bot.send_message(chat_id=group_id,text='Il protettore sceglie chi salvare poi torna a dormire')
+    elif role=='protettore': bot.send_message(chat_id=group_id,text='Il protettore sceglie chi proteggere poi torna a dormire')
     for player in player_list:
         player.sleep()
     if role_index==len(role_list)-1:
@@ -259,9 +307,9 @@ def menu(bot,update): #resetta le variabili globali
         bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
                          text='Ho creato un nuovo villaggio. Invia un messaggio privato a @lupusinbot con scritto /join per entrare.\nQuando tutti sono entrati scrivi /settings per impostare i ruoli')
         can_join=1
-    else: 
+    else:
         bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
-                     text='Seleziona un''opzione dal menù di aiuto')
+                     text="Seleziona un'opzione dal menù di aiuto")
         help(bot,update)
 def help(bot,update):
     kb = [
@@ -344,7 +392,7 @@ def button_mixer(bot,update):
     elif data in ['lupo','veggente','protettore','contadino']:
         ruoli(bot,update)
     elif data in ['ruoli','comandi','faq']:
-        menu(bot,update)
+        helpmenu(bot,update)
     elif data=='play': start_match(bot)
 
 
