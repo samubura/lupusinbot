@@ -259,9 +259,10 @@ def menu(bot,update): #resetta le variabili globali
         bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
                          text='Ho creato un nuovo villaggio. Invia un messaggio privato a @lupusinbot con scritto /join per entrare.\nQuando tutti sono entrati scrivi /settings per impostare i ruoli')
         can_join=1
-    else: bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
+    else: 
+        bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
                      text='Seleziona un''opzione dal menù di aiuto')
-                     help(bot,update)
+        help(bot,update)
 def help(bot,update):
     kb = [
     [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
