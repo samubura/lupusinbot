@@ -5,6 +5,9 @@ import time
 import random
 import os
 
+
+
+
 #variabili globali utility
 TOKEN = "418736265:AAHwfZPegrNyi8KgYcLfDp1oZkvSNDjZ1aU"
 PORT = int(os.environ.get('PORT', '5000'))
