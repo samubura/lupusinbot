@@ -5,9 +5,6 @@ import time
 import random
 import os
 
-
-
-
 #variabili globali utility
 TOKEN = "418736265:AAHwfZPegrNyi8KgYcLfDp1oZkvSNDjZ1aU"
 PORT = int(os.environ.get('PORT', '5000'))
@@ -136,7 +133,7 @@ def start_match(bot):
     for p in player_list:
         if p.role=='lupo':
             wolf_list.append(p)
-        elif p.role in ['protettore','assassino']
+        elif p.role in ['protettore','assassino']:
             p.special_power=1
     if len(wolf_list)==1:
         bot.send_message(chat_id=wolf_list[0].chat_id,text='Sei un lupo solitario!')
