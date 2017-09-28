@@ -328,9 +328,9 @@ def start(bot,update):
         bot.send_message(chat_id=update.message.chat_id, text='Non disponi delle autorizzazioni necessarie per usare questo bot')
 def newgame(bot, update):
     if update.message.chat.type=='group':
-        kb = [[telegram.InlineKeyboardButton('Sì',callback_data='y'),telegram.InlineKeyboardButton('No',callback_data='n')]]
+        kb = [[telegram.InlineKeyboardButton('Nuova partita',callback_data='y')]]
         kb_markup = telegram.InlineKeyboardMarkup(kb)
-        bot.send_message(chat_id=update.message.chat_id, text='Nuova partita? Tutti i progressi attuali saranno persi', reply_markup=kb_markup)
+        bot.send_message(chat_id=update.message.chat_id, text='Iniziare una nuova partita? Tutti i progressi attuali saranno persi', reply_markup=kb_markup)
     else:
         bot.send_message(chat_id=update.message.chat_id, text='Non puoi usare questo comando in una chat privata')
 def menu(bot,update): #resetta le variabili globali
@@ -350,15 +350,12 @@ def menu(bot,update): #resetta le variabili globali
                          text='Ho creato un nuovo villaggio. Invia un messaggio privato a @lupusinbot con scritto /join per entrare.\nQuando tutti sono entrati scrivi /settings per impostare i ruoli')
     can_join=1
 def helper(bot,update):
-    print('###################ENTRO NELLA FUNZIONE HELP######################')
-    bot.send_message(chat_id=update.callback_query.message.chat.id,text='MENU HELP')
-    bot.send_message(chat_id=group_id,text='FUNZIONA HELP')
     kb = [
     [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
     [telegram.InlineKeyboardButton('Come si gioca?',callback_data='faq')]
     ]
     kb_markup = telegram.InlineKeyboardMarkup(kb)
-    bot.send_message(chat_id=update.callback_query.message.chat.id,text='Come posso aiutarti?', reply_markup=kb_markup)
+    bot.send_message(chat_id=update.message.chat.id,text='Come posso aiutarti?', reply_markup=kb_markup)
 def helpmenu(bot,update):
     data=update.callback_query.data
     if data=='ruoli':
@@ -448,8 +445,6 @@ def button_mixer(bot,update):
     data=update.callback_query.data
     if data == 'y':
         menu(bot,update)
-    elif data=='n':
-        helper(bot,update)
     elif data in ['lupo','veggente','protettore','contadino']:
         ruoli(bot,update)
     elif data in ['ruoli','comandi','faq']:
