@@ -350,6 +350,7 @@ def menu(bot,update): #resetta le variabili globali
                          text='Ho creato un nuovo villaggio. Invia un messaggio privato a @lupusinbot con scritto /join per entrare.\nQuando tutti sono entrati scrivi /settings per impostare i ruoli')
     can_join=1
 def helper(bot,update):
+    bot.send_message(chat_id=update.callbac_query.message.chat.id,text='MENU HELP')
     kb = [
     [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
     [telegram.InlineKeyboardButton('Come si gioca?',callback_data='faq')]
@@ -453,9 +454,6 @@ def button_mixer(bot,update):
         helpmenu(bot,update)
     elif data=='play': start_match(bot)
 
-def prova(bot,update):
-    bot.send_message(chat_id=update.message.chat.id,text="PROVA WORKING")
-
 #definizioni menu
 start=CommandHandler('start',start)
 dispatcher.add_handler(start)
@@ -465,7 +463,7 @@ newgame=CommandHandler('newgame',newgame)
 dispatcher.add_handler(newgame)
 settings=CommandHandler('settings',set_roles)
 dispatcher.add_handler(settings)
-helper=CommandHandler('help',prova)
+helper=CommandHandler('help',helper)
 dispatcher.add_handler(helper)
 
 
