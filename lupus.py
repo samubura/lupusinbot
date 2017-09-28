@@ -443,7 +443,7 @@ def ruoli(bot,update):
 #gestione tutti menu a bototoni
 def button_mixer(bot,update):
     data=update.callback_query.data
-    if data == 'y'
+    if data == 'y':
         menu(bot,update)
     elif data=='n':
         helper(bot,update)
