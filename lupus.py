@@ -359,25 +359,25 @@ def helper(bot,update):
 def helpmenu(bot,update):
     data=update.callback_query.data
     if data=='ruoli':
-        bot.send_message(chat_id=update.callback_query.message.chat.id, text="**RUOLI**\n__Lupo__: Se sei un lupo devi uccidere tutti gli altri membri del villaggio, esclusi i tuoi compagni lupi.\nAccordatevi di notte per scegliere chi uccidere\n"
-                                                                                        "__Veggente__: Il veggente può scoprire se un membro del villaggio è un lupo o no, ma deve essere cauto a rivelarsi o i lupi lo uccideranno!\n"
-                                                                                        "__Protettore__: Il protettore può scegliere ogni notte qualcuno da salvare, può salvarsi anche da solo ma solo una volta durante la partita!\n"
-                                                                                        "__Contadino__: I Contadini non hanno poteri speciali, devono cercare di bruciare i lupi sul rogo per salvarsi"
-                                                                                        "\n [altri ruoli in arrivo...]")
+        bot.send_message(chat_id=update.callback_query.message.chat.id,parse_mode='Markdown' text="*RUOLI*\n_Lupo_: Se sei un lupo devi uccidere tutti gli altri membri del villaggio, esclusi i tuoi compagni lupi.\nAccordatevi di notte per scegliere chi uccidere\n"
+                                                                                        "_Veggente_: Il veggente può scoprire se un membro del villaggio è un lupo o no, ma deve essere cauto a rivelarsi o i lupi lo uccideranno!\n"
+                                                                                        "_Protettore_: Il protettore può scegliere ogni notte qualcuno da salvare, può salvarsi anche da solo ma solo una volta durante la partita!\n"
+                                                                                        "_Contadino_: I Contadini non hanno poteri speciali, devono cercare di bruciare i lupi sul rogo per salvarsi"
+                                                                                        "\n _[altri ruoli in arrivo...]_")
     elif data=='comandi':
-        bot.send_message(chat_id=update.callback_query.message.chat.id, text="**COMANDI**\nstart - Avvia il bot\n"
-        "help - Visualizza il menu\n"
-        "newgame - Crea una nuova partita\n"
-        "join - Entra in una nuova partita\n"
-        "settings - Imposta i ruoli\n"
-        "kill - <player> Scegli chi uccidere di notte\n"
-        "burn - <player> Scegli chi mandare al rogo\n"
-        "see - <player> Scopri il ruolo del giocatore scelto\n"
-        "save - <player> Proteggi un giocatore per una notte\n")
+        bot.send_message(chat_id=update.callback_query.message.chat.id,parse_mode='Markdown', text="*COMANDI*\n/start - Avvia il bot\n"
+        "/help - Visualizza il menu\n"
+        "/newgame - Crea una nuova partita\n"
+        "/join - Entra in una nuova partita\n"
+        "/settings - Imposta i ruoli\n"
+        "/kill - <player> Scegli chi uccidere di notte\n"
+        "/burn - <player> Scegli chi mandare al rogo\n"
+        "/see - <player> Scopri il ruolo del giocatore scelto\n"
+        "/save - <player> Proteggi un giocatore per una notte\n")
     elif data=='faq':
-        bot.send_message(chat_id=update.callback_query.message.chat.id, text="**COME SI GIOCA**\n"
+        bot.send_message(chat_id=update.callback_query.message.chat.id,parse_mode='Markdown', text="*COME SI GIOCA*\n"
                                                                             "Scrivi /start per avviare il bot dopo un periodo di inattività, attendi la risposta anche se potrebbe volerci un po'\n"
-                                                                            "Una volta avviato scegliete **una persona** che si occuperà di creare la partita e impostarla (per non fare confusione)\n"
+                                                                            "Una volta avviato scegliete *una persona* che si occuperà di creare la partita e impostarla (per non fare confusione)\n"
                                                                             "Scrivi /newgame per avviare una partita e poi scrivete /join in chat **privata** per unirvi alla partita appena iniziata\n"
                                                                             "Scrivi /settings quando tutti sono entrati e poi premi i pulsanti per aggiungere personaggi (dai tempo al bot di rispondere)\n"
                                                                             "Quando è tutto pronto premi INIZIA PARTITA per avviare il gioco e segui le indicazioni del bot per le varie fasi\n"
