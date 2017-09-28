@@ -351,7 +351,8 @@ def menu(bot,update): #resetta le variabili globali
     can_join=1
 def helper(bot,update):
     print('###################ENTRO NELLA FUNZIONE HELP######################')
-    bot.send_message(chat_id=update.callbac_query.message.chat.id,text='MENU HELP')
+    bot.send_message(chat_id=update.callback_query.message.chat.id,text='MENU HELP')
+    bot.send_message(chat_id=group_id,text='FUNZIONA HELP')
     kb = [
     [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
     [telegram.InlineKeyboardButton('Come si gioca?',callback_data='faq')]
