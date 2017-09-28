@@ -341,20 +341,15 @@ def menu(bot,update): #resetta le variabili globali
     global night_counter
     global role_list
 
-    if update.callback_query.data=='y':
-        del player_list[:]
-        del role_list[:]
-        del group_list[:]
-        group_id=update.callback_query.message.chat_id
-        group_list=bot.get_chat_administrators(group_id)
-        bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
+    del player_list[:]
+    del role_list[:]
+    del group_list[:]
+    group_id=update.callback_query.message.chat_id
+    group_list=bot.get_chat_administrators(group_id)
+    bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
                          text='Ho creato un nuovo villaggio. Invia un messaggio privato a @lupusinbot con scritto /join per entrare.\nQuando tutti sono entrati scrivi /settings per impostare i ruoli')
-        can_join=1
-    else:
-        bot.edit_message_text(chat_id=group_id, message_id=update.callback_query.message.message_id,
-                     text="Seleziona un'opzione dal menù di aiuto")
-        help(bot,update)
-def help(bot,update):
+    can_join=1
+def helper(bot,update):
     kb = [
     [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
     [telegram.InlineKeyboardButton('Come si gioca?',callback_data='faq')]
@@ -448,8 +443,10 @@ def ruoli(bot,update):
 #gestione tutti menu a bototoni
 def button_mixer(bot,update):
     data=update.callback_query.data
-    if data in ['y','n']:
+    if data == 'y'
         menu(bot,update)
+    elif data=='n':
+        helper(bot,update)
     elif data in ['lupo','veggente','protettore','contadino']:
         ruoli(bot,update)
     elif data in ['ruoli','comandi','faq']:
@@ -466,8 +463,8 @@ newgame=CommandHandler('newgame',newgame)
 dispatcher.add_handler(newgame)
 settings=CommandHandler('settings',set_roles)
 dispatcher.add_handler(settings)
-helpmenu=CommandHandler('help',help)
-dispatcher.add_handler(helpmenu)
+helper=CommandHandler('help',helper)
+dispatcher.add_handler(helper)
 
 
 #powers
@@ -491,4 +488,3 @@ updater.start_webhook(listen="0.0.0.0",
                     port=PORT,
                     url_path=TOKEN)
 updater.idle()
-
