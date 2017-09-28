@@ -359,7 +359,7 @@ def helper(bot,update):
 def helpmenu(bot,update):
     data=update.callback_query.data
     if data=='ruoli':
-        bot.send_message(chat_id=update.callback_query.message.chat.id,parse_mode='Markdown' text="*RUOLI*\n_Lupo_: Se sei un lupo devi uccidere tutti gli altri membri del villaggio, esclusi i tuoi compagni lupi.\nAccordatevi di notte per scegliere chi uccidere\n"
+        bot.send_message(chat_id=update.callback_query.message.chat.id,parse_mode='Markdown', text="*RUOLI*\n_Lupo_: Se sei un lupo devi uccidere tutti gli altri membri del villaggio, esclusi i tuoi compagni lupi.\nAccordatevi di notte per scegliere chi uccidere\n"
                                                                                         "_Veggente_: Il veggente può scoprire se un membro del villaggio è un lupo o no, ma deve essere cauto a rivelarsi o i lupi lo uccideranno!\n"
                                                                                         "_Protettore_: Il protettore può scegliere ogni notte qualcuno da salvare, può salvarsi anche da solo ma solo una volta durante la partita!\n"
                                                                                         "_Contadino_: I Contadini non hanno poteri speciali, devono cercare di bruciare i lupi sul rogo per salvarsi"
