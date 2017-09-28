@@ -350,23 +350,22 @@ def menu(bot,update): #resetta le variabili globali
                          text='Ho creato un nuovo villaggio. Invia un messaggio privato a @lupusinbot con scritto /join per entrare.\nQuando tutti sono entrati scrivi /settings per impostare i ruoli')
     can_join=1
 def helper(bot,update):
-    bot.send_message(chat_id=group_id, text='MENU HELP')
     kb = [
     [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
     [telegram.InlineKeyboardButton('Come si gioca?',callback_data='faq')]
     ]
     kb_markup = telegram.InlineKeyboardMarkup(kb)
-    bot.send_message(chat_id=update.callback_query.message.chat_id,text='Come posso aiutarti?', reply_markup=kb_markup)
+    bot.send_message(chat_id=update.callback_query.message.chat.id,text='Come posso aiutarti?', reply_markup=kb_markup)
 def helpmenu(bot,update):
     data=update.callback_query.data
     if data=='ruoli':
-        bot.send_message(chat_id=update.callback_query.message.chat_id, text="**RUOLI**\n__Lupo__: Se sei un lupo devi uccidere tutti gli altri membri del villaggio, esclusi i tuoi compagni lupi.\nAccordatevi di notte per scegliere chi uccidere\n"
+        bot.send_message(chat_id=update.callback_query.message.chat.id, text="**RUOLI**\n__Lupo__: Se sei un lupo devi uccidere tutti gli altri membri del villaggio, esclusi i tuoi compagni lupi.\nAccordatevi di notte per scegliere chi uccidere\n"
                                                                                         "__Veggente__: Il veggente può scoprire se un membro del villaggio è un lupo o no, ma deve essere cauto a rivelarsi o i lupi lo uccideranno!\n"
                                                                                         "__Protettore__: Il protettore può scegliere ogni notte qualcuno da salvare, può salvarsi anche da solo ma solo una volta durante la partita!\n"
                                                                                         "__Contadino__: I Contadini non hanno poteri speciali, devono cercare di bruciare i lupi sul rogo per salvarsi"
                                                                                         "\n [altri ruoli in arrivo...]")
     elif data=='comandi':
-        bot.send_message(chat_id=update.callback_query.message.chat_id, text="**COMANDI**\nstart - Avvia il bot\n"
+        bot.send_message(chat_id=update.callback_query.message.chat.id, text="**COMANDI**\nstart - Avvia il bot\n"
         "help - Visualizza il menu\n"
         "newgame - Crea una nuova partita\n"
         "join - Entra in una nuova partita\n"
@@ -376,7 +375,7 @@ def helpmenu(bot,update):
         "see - <player> Scopri il ruolo del giocatore scelto\n"
         "save - <player> Proteggi un giocatore per una notte\n")
     elif data=='faq':
-        bot.send_message(chat_id=update.callback_query.message.chat_id, text="**COME SI GIOCA**\n"
+        bot.send_message(chat_id=update.callback_query.message.chat.id, text="**COME SI GIOCA**\n"
                                                                             "Scrivi /start per avviare il bot dopo un periodo di inattività, attendi la risposta anche se potrebbe volerci un po'\n"
                                                                             "Una volta avviato scegliete **una persona** che si occuperà di creare la partita e impostarla (per non fare confusione)\n"
                                                                             "Scrivi /newgame per avviare una partita e poi scrivete /join in chat **privata** per unirvi alla partita appena iniziata\n"
@@ -454,6 +453,8 @@ def button_mixer(bot,update):
         helpmenu(bot,update)
     elif data=='play': start_match(bot)
 
+def prova(bot,update):
+    bot.send_message(chat_id=update.message.chat.id,text="PROVA WORKING")
 
 #definizioni menu
 start=CommandHandler('start',start)
@@ -464,7 +465,7 @@ newgame=CommandHandler('newgame',newgame)
 dispatcher.add_handler(newgame)
 settings=CommandHandler('settings',set_roles)
 dispatcher.add_handler(settings)
-helper=CommandHandler('help',helper)
+helper=CommandHandler('help',prova)
 dispatcher.add_handler(helper)
 
 
