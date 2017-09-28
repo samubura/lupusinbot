@@ -23,6 +23,7 @@ role_list=[]
 role_index=0
 can_join=0
 night=True
+night_counter=0
 
 #definizioni classi
 class Player():
@@ -154,7 +155,7 @@ def save(bot,update,args):
                             if player.special_power>0:
                                 player.use_special()
                                 bot.send_message(chat_id=update.message.chat_id,text='Ti sei salvato da solo, non potrai più farlo durante la partita')
-                            else: 
+                            else:
                                 bot.send_message(chat_id=update.message.chat_id,text="Puoi salvarti da solo una sola volta scegli un altro giocatore")
                                 return
                         if i.status=='victim':
@@ -207,17 +208,21 @@ def awakening(bot): #awaken only the right role
     #activate powers
     for player in player_list:
         if player.role==role:
-            player.wake()
-            bot.send_message(chat_id=player.chat_id,text='Lista persone vive:')
-            for p in player_list:
-                if p.status!='dead' and p.role!=role:
-                    bot.send_message(chat_id=player.chat_id,text=p.name)
-            if role=='lupo':
-                bot.send_message(chat_id=player.chat_id,text='Puoi usare /kill <name> per scegliere chi uccidere')
-            elif role=='veggente':
-                bot.send_message(chat_id=player.chat_id,text='Puoi usare /see <name> per scegliere chi esaminare')
-            elif role=='protettore':
-                bot.send_message(chat_id=player.chat_id,text='Puoi usare /save <name> per scegliere chi salvare')
+            if player.status=='dead':
+                time.sleep(random.randint(1200,3000))
+                go_sleep()
+            else:
+                player.wake()
+                bot.send_message(chat_id=player.chat_id,text='Lista persone vive:')
+                for p in player_list:
+                    if p.status!='dead' and p.role!=role:
+                        bot.send_message(chat_id=player.chat_id,text=p.name)
+                if role=='lupo':
+                    bot.send_message(chat_id=player.chat_id,text='Puoi usare /kill <name> per scegliere chi uccidere')
+                elif role=='veggente':
+                    bot.send_message(chat_id=player.chat_id,text='Puoi usare /see <name> per scegliere chi esaminare')
+                elif role=='protettore':
+                    bot.send_message(chat_id=player.chat_id,text='Puoi usare /save <name> per scegliere chi salvare')
         return
 def go_sleep(bot):
     global role_index
@@ -275,7 +280,43 @@ def end_day(bot):
         death_mex=player.name + ' è stato bruciato, tutti tornano a casa sentendosi più sicuri'
         bot.send_message(chat_id=group_id,text=death_mex)
 
-    awakening(bot)
+    #CHECK VICTORY
+    c=0
+    w=0
+    for player in player_list:
+        if player.role=='lupo' and player.status=='alive':
+            w+=1
+        if player.role!='lupo' and player.status=='alive':
+            c+=1
+
+    if w==0:
+        bot.send_message(chat_id=group_id,text="Tutti i lupi sono morti!\nVittoria dei contadini.")
+        end_game(bot)
+    elif c==0:
+        bot.send_message(chat_id=group_id,text="Tutti gli abitanti del villaggio sono morti!\nVittoria dei lupi.")
+        end_game(bot)
+    else:
+        awakening(bot)
+
+def end_game(bot):
+    global player_list
+    global role_list
+    global group_list
+    global group_id
+    global role_index
+    global can_join
+    global night
+    global night_counter
+
+    del player_list[:]
+    del role_list[:]
+    del group_list[:]
+    group_id=0
+    role_index=0
+    can_join=0
+    night=True
+    night_counter=0
+    bot.send_message(chat_id=group_id,text="Partita finita, per iniziare una nuova partita scrivi /newgame")
 
 #Definizioni funzioni per relazionarsi con l'utente
 def start(bot,update):
@@ -323,11 +364,29 @@ def help(bot,update):
 def helpmenu(bot,update):
     data=update.callback_query.data
     if data=='ruoli':
-        bot.send_message(chat_id=update.callback_query.message.chat_id, text='RUOLI\n[in espansione..]')
+        bot.send_message(chat_id=update.callback_query.message.chat_id, text="**RUOLI**\n__Lupo__: Se sei un lupo devi uccidere tutti gli altri membri del villaggio, esclusi i tuoi compagni lupi.\nAccordatevi di notte per scegliere chi uccidere\n"
+                                                                                        "__Veggente__: Il veggente può scoprire se un membro del villaggio è un lupo o no, ma deve essere cauto a rivelarsi o i lupi lo uccideranno!\n"
+                                                                                        "__Protettore__: Il protettore può scegliere ogni notte qualcuno da salvare, può salvarsi anche da solo ma solo una volta durante la partita!\n"
+                                                                                        "__Contadino__: I Contadini non hanno poteri speciali, devono cercare di bruciare i lupi sul rogo per salvarsi"
+                                                                                        "\n [altri ruoli in arrivo...]")
     elif data=='comandi':
-        bot.send_message(chat_id=update.callback_query.message.chat_id, text='COMANDI\n[in espansione..]')
+        bot.send_message(chat_id=update.callback_query.message.chat_id, text="**COMANDI**\nstart - Avvia il bot\n"
+        "help - Visualizza il menu\n"
+        "newgame - Crea una nuova partita\n"
+        "join - Entra in una nuova partita\n"
+        "settings - Imposta i ruoli\n"
+        "kill - <player> Scegli chi uccidere di notte\n"
+        "burn - <player> Scegli chi mandare al rogo\n"
+        "see - <player> Scopri il ruolo del giocatore scelto\n"
+        "save - <player> Proteggi un giocatore per una notte\n")
     elif data=='faq':
-        bot.send_message(chat_id=update.callback_query.message.chat_id, text='COME SI GIOCA\n[in espansione..]')
+        bot.send_message(chat_id=update.callback_query.message.chat_id, text="**COME SI GIOCA**\n"
+                                                                            "Scrivi /start per avviare il bot dopo un periodo di inattività, attendi la risposta anche se potrebbe volerci un po'\n"
+                                                                            "Una volta avviato scegliete **una persona** che si occuperà di creare la partita e impostarla (per non fare confusione)\n"
+                                                                            "Scrivi /newgame per avviare una partita e poi scrivete /join in chat **privata** per unirvi alla partita appena iniziata\n"
+                                                                            "Scrivi /settings quando tutti sono entrati e poi premi i pulsanti per aggiungere personaggi (dai tempo al bot di rispondere)\n"
+                                                                            "Quando è tutto pronto premi INIZIA PARTITA per avviare il gioco e segui le indicazioni del bot per le varie fasi\n"
+                                                                            "Buon divertimento!\n")
 def createPlayer(bot,update):
     #creating a new player
     global player_list
@@ -398,7 +457,7 @@ def button_mixer(bot,update):
     elif data=='play': start_match(bot)
 
 
-#definizioni handler di base
+#definizioni menu
 start=CommandHandler('start',start)
 dispatcher.add_handler(start)
 join=CommandHandler('join',createPlayer)
@@ -407,6 +466,10 @@ newgame=CommandHandler('newgame',newgame)
 dispatcher.add_handler(newgame)
 settings=CommandHandler('settings',set_roles)
 dispatcher.add_handler(settings)
+helpmenu=CommandHandler('help',help)
+dispatcher.add_handler(helpmenu)
+
+
 #powers
 kill=CommandHandler('kill',kill,pass_args=True)
 dispatcher.add_handler(kill)
@@ -416,6 +479,8 @@ save=CommandHandler('save',save,pass_args=True)
 dispatcher.add_handler(save)
 burn=CommandHandler('burn',burn,pass_args=True)
 dispatcher.add_handler(burn)
+
+
 #callbackQuery
 buttons=CallbackQueryHandler(button_mixer)
 dispatcher.add_handler(buttons)
@@ -426,3 +491,4 @@ updater.start_webhook(listen="0.0.0.0",
                     port=PORT,
                     url_path=TOKEN)
 updater.idle()
+
