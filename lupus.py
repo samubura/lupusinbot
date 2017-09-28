@@ -350,6 +350,7 @@ def menu(bot,update): #resetta le variabili globali
                          text='Ho creato un nuovo villaggio. Invia un messaggio privato a @lupusinbot con scritto /join per entrare.\nQuando tutti sono entrati scrivi /settings per impostare i ruoli')
     can_join=1
 def helper(bot,update):
+    print('###################ENTRO NELLA FUNZIONE HELP######################')
     bot.send_message(chat_id=update.callbac_query.message.chat.id,text='MENU HELP')
     kb = [
     [telegram.InlineKeyboardButton('Elenco ruoli',callback_data='ruoli'),telegram.InlineKeyboardButton('Elenco comandi',callback_data='comandi')],
