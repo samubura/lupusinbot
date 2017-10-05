@@ -63,7 +63,7 @@ def showMatchInfo(bot,update):
         matchInfo="*CURRENT MATCH INFO*\nPlayerList:\n"
         bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
         for player in player_list:
-            matchInfo=player.name + " " + player.role +" " +player.status+" power:"+string(player.can_power)
+            matchInfo=player.name + " " + player.role +" " +player.status+" power:"+str(player.can_power)
             bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
 
 #Definizioni poteri principali
