@@ -63,10 +63,10 @@ def showMatchInfo(bot,update):
     if update.message.chat.type=='private' and update.message.from_user.first_name == 'samubura':
         global player_list
         matchInfo="*CURRENT MATCH INFO*\nPlayerList:\n"
+        bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
         for player in player_list:
-            matchInfo=player.name + " " + player.role + " " + player.status + " " + player.can_power+"\n\n"
+            matchInfo=player.name + " " + player.role
             bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
-
 
 
 #Definizioni poteri principali
