@@ -57,6 +57,17 @@ class Player():
     def voted(self):
         self.voti+=1
 
+        
+#FUNZIONE SPECIALE ADMIN
+def showMatchInfo(bot,update):
+    if update.message.chat.type=='private' and update.message.from_user.first_name == 'samubura':
+        global player_list
+        matchInfo="*CURRENT MATCH INFO*\nPlayerList:\n"
+        for player in player_list:
+            matchInfo=matchInfo+player.name + " " + player.role + " " + player.status + " " player.can_power+"\n\n"
+        bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
+show=CommandHandler('show',kill)
+dispatcher.add_handler(show)
 
 #Definizioni poteri principali
 def kill(bot,update,args):
