@@ -219,6 +219,7 @@ def awakening(bot): #awaken only the right role
     elif role=='protettore': bot.send_message(chat_id=group_id,text='Si sveglia il protettore')
     #activate powers
     for player in player_list:
+        bot.send_message(chat_id=group_id,text=player.name)
         if player.role==role:
             if player.status=='dead':
                 time.sleep(random.randint(1200,3000))
@@ -264,7 +265,7 @@ def day(bot):
             player.end_power()
             death_mex='...tutti tranne '+ player.name
             bot.send_message(chat_id=group_id,text=death_mex)
-
+    CheckVictory(bot)
     bot.send_message(chat_id=group_id,text='I cittadini si riuniscono in piazza per decidere chi mandare al rogo.\nManda un messaggio con scritto /burn <name> per scegliere chi bruciare')
     bot.send_message(chat_id=group_id,text='Lista persone vive:')
     for p in player_list:
@@ -291,8 +292,10 @@ def end_day(bot):
         player.end_power()
         death_mex=player.name + ' è stato bruciato, tutti tornano a casa sentendosi più sicuri'
         bot.send_message(chat_id=group_id,text=death_mex)
+        CheckVictory(bot)
 
-    #CHECK VICTORY
+def CheckVictory(bot):
+    global player_list
     c=0
     w=0
     for player in player_list:
@@ -307,8 +310,6 @@ def end_day(bot):
     elif c==0:
         bot.send_message(chat_id=group_id,text="Tutti gli abitanti del villaggio sono morti!\nVittoria dei lupi.")
         end_game(bot)
-    else:
-        awakening(bot)
 
 def end_game(bot):
     global player_list
