@@ -28,7 +28,7 @@ night_counter=0
 #definizioni classi
 class Player():
     """Player entity"""
-    def __init__(self, name, chat_id, role=None, status='alive',vote=0, can_power=0,special_power=0):
+    def __init__(self, name, chat_id, role='default', status='alive',vote=0, can_power=0,special_power=0):
         self.name = name
         self.chat_id = chat_id
         self.role = role
@@ -56,8 +56,6 @@ class Player():
             self.status=status
     def voted(self):
         self.voti+=1
-
-        
 #FUNZIONE SPECIALE ADMIN
 def showMatchInfo(bot,update):
     if update.message.chat.type=='private' and update.message.from_user.first_name == 'samubura':
@@ -65,9 +63,8 @@ def showMatchInfo(bot,update):
         matchInfo="*CURRENT MATCH INFO*\nPlayerList:\n"
         bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
         for player in player_list:
-            matchInfo=player.name + " " + player.role +" " + player.status + " " + player.can_power
+            matchInfo=player.name + " " + player.role
             bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
-
 
 #Definizioni poteri principali
 def kill(bot,update,args):
@@ -436,7 +433,7 @@ def ruoli(bot,update):
     role=update.callback_query.data
     i=random.randint(0,len(player_list)-1)
     c=0
-    while player_list[i].role != None and c<=len(player_list):
+    while player_list[i].role != 'default' and c<=len(player_list):
         i=random.randint(0,len(player_list)-1)
         c+=1
     if c<=len(player_list):
