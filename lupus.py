@@ -218,6 +218,7 @@ def awakening(bot): #awaken only the right role
     elif role=='protettore': bot.send_message(chat_id=group_id,text='Si sveglia il protettore')
     #activate powers
     for player in player_list:
+        bot.send_message(chat_id=group_id,text='LOOP WORKING')
         if player.role==role:
             if player.status=='dead':
                 time.sleep(random.randint(1200,3000))
