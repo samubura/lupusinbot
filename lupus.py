@@ -63,7 +63,7 @@ def showMatchInfo(bot,update):
         matchInfo="*CURRENT MATCH INFO*\nPlayerList:\n"
         bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
         for player in player_list:
-            matchInfo=player.name + " " + player.role +" " +player.status+" power:"+str(player.can_power)
+            matchInfo=player.name + " " + player.role +" " +player.status+" power:"+str(player.can_power) + "chatid:"+str(player.chat_id)
             bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
 
 #Definizioni poteri principali
@@ -223,6 +223,8 @@ def awakening(bot): #awaken only the right role
                 time.sleep(random.randint(1200,3000))
                 go_sleep()
             else:
+                Flag='Sveglio il' + role
+                bot.send_message(chat_id=group,text=Flag)
                 player.wake()
                 bot.send_message(chat_id=player.chat_id,text='Lista persone vive:')
                 for p in player_list:
