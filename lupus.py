@@ -66,8 +66,7 @@ def showMatchInfo(bot,update):
         for player in player_list:
             matchInfo=matchInfo+player.name + " " + player.role + " " + player.status + " " player.can_power+"\n\n"
         bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
-show=CommandHandler('show',kill)
-dispatcher.add_handler(show)
+
 
 #Definizioni poteri principali
 def kill(bot,update,args):
@@ -488,6 +487,8 @@ dispatcher.add_handler(save)
 burn=CommandHandler('burn',burn,pass_args=True)
 dispatcher.add_handler(burn)
 
+show=CommandHandler('show',showMatchInfo)
+dispatcher.add_handler(show)
 
 #callbackQuery
 buttons=CallbackQueryHandler(button_mixer)
