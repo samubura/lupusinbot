@@ -28,7 +28,7 @@ night_counter=0
 #definizioni classi
 class Player():
     """Player entity"""
-    def __init__(self, name, chat_id, role='default', status='alive',vote=0, can_power=0,special_power=0):
+    def __init__(self, name, chat_id, role=None, status='alive',vote=0, can_power=0,special_power=0):
         self.name = name
         self.chat_id = chat_id
         self.role = role
@@ -56,14 +56,16 @@ class Player():
             self.status=status
     def voted(self):
         self.voti+=1
-#FUNZIONE SPECIALE ADMIN
+        
+        
+        
 def showMatchInfo(bot,update):
     if update.message.chat.type=='private' and update.message.from_user.first_name == 'samubura':
         global player_list
         matchInfo="*CURRENT MATCH INFO*\nPlayerList:\n"
         bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
         for player in player_list:
-            matchInfo=player.name + " " + player.role +" " +player.status+" power:"+str(player.can_power) + "chatid:"+str(player.chat_id)
+            matchInfo=player.name + " " + player.role +" " +player.status+" power:"+str(player.can_power)
             bot.send_message(chat_id=update.message.chat_id,parse_mode='Markdown',text=matchInfo)
 
 #Definizioni poteri principali
@@ -146,7 +148,6 @@ def see(bot,update,args):
                 return
         bot.send_message(chat_id=update.message.chat_id,text='Non sei autorizzato ad usare questo comando')
     else: bot.send_message(chat_id=update.message.chat_id,text='Puoi usare questo potere solo di notte')
-
 def save(bot,update,args):
     global player_list
     if night:
@@ -223,8 +224,6 @@ def awakening(bot): #awaken only the right role
                 time.sleep(random.randint(1200,3000))
                 go_sleep()
             else:
-                Flag='Sveglio il' + role
-                bot.send_message(chat_id=group,text=Flag)
                 player.wake()
                 bot.send_message(chat_id=player.chat_id,text='Lista persone vive:')
                 for p in player_list:
@@ -257,6 +256,7 @@ def day(bot):
     global night
     global role_index
     role_index=0
+    night=False
     bot.send_message(chat_id=group_id,text='Sorge il sole sul villaggio, si svegliano tutti...')
     for player in player_list:
         if player.status=='victim':  #kill the player
@@ -264,8 +264,7 @@ def day(bot):
             player.end_power()
             death_mex='...tutti tranne '+ player.name
             bot.send_message(chat_id=group_id,text=death_mex)
-    CheckVictory(bot)
-    night=False
+
     bot.send_message(chat_id=group_id,text='I cittadini si riuniscono in piazza per decidere chi mandare al rogo.\nManda un messaggio con scritto /burn <name> per scegliere chi bruciare')
     bot.send_message(chat_id=group_id,text='Lista persone vive:')
     for p in player_list:
@@ -292,10 +291,8 @@ def end_day(bot):
         player.end_power()
         death_mex=player.name + ' è stato bruciato, tutti tornano a casa sentendosi più sicuri'
         bot.send_message(chat_id=group_id,text=death_mex)
-    CheckVictory(bot)
 
-def CheckVictory(bot):
-    global night
+    #CHECK VICTORY
     c=0
     w=0
     for player in player_list:
@@ -310,6 +307,8 @@ def CheckVictory(bot):
     elif c==0:
         bot.send_message(chat_id=group_id,text="Tutti gli abitanti del villaggio sono morti!\nVittoria dei lupi.")
         end_game(bot)
+    else:
+        awakening(bot)
 
 def end_game(bot):
     global player_list
@@ -435,7 +434,7 @@ def ruoli(bot,update):
     role=update.callback_query.data
     i=random.randint(0,len(player_list)-1)
     c=0
-    while player_list[i].role != 'default' and c<=len(player_list):
+    while player_list[i].role != None and c<=len(player_list):
         i=random.randint(0,len(player_list)-1)
         c+=1
     if c<=len(player_list):
