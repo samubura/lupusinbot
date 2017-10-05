@@ -56,6 +56,8 @@ class Player():
             self.status=status
     def voted(self):
         self.voti+=1
+
+
 #Definizioni poteri principali
 def kill(bot,update,args):
     global player_list
@@ -136,6 +138,7 @@ def see(bot,update,args):
                 return
         bot.send_message(chat_id=update.message.chat_id,text='Non sei autorizzato ad usare questo comando')
     else: bot.send_message(chat_id=update.message.chat_id,text='Puoi usare questo potere solo di notte')
+
 def save(bot,update,args):
     global player_list
     if night:
@@ -244,7 +247,6 @@ def day(bot):
     global night
     global role_index
     role_index=0
-    night=False
     bot.send_message(chat_id=group_id,text='Sorge il sole sul villaggio, si svegliano tutti...')
     for player in player_list:
         if player.status=='victim':  #kill the player
@@ -252,7 +254,8 @@ def day(bot):
             player.end_power()
             death_mex='...tutti tranne '+ player.name
             bot.send_message(chat_id=group_id,text=death_mex)
-
+    CheckVictory(bot)
+    night=False
     bot.send_message(chat_id=group_id,text='I cittadini si riuniscono in piazza per decidere chi mandare al rogo.\nManda un messaggio con scritto /burn <name> per scegliere chi bruciare')
     bot.send_message(chat_id=group_id,text='Lista persone vive:')
     for p in player_list:
@@ -279,8 +282,10 @@ def end_day(bot):
         player.end_power()
         death_mex=player.name + ' è stato bruciato, tutti tornano a casa sentendosi più sicuri'
         bot.send_message(chat_id=group_id,text=death_mex)
+    CheckVictory(bot)
 
-    #CHECK VICTORY
+def CheckVictory(bot):
+    global night
     c=0
     w=0
     for player in player_list:
@@ -295,8 +300,6 @@ def end_day(bot):
     elif c==0:
         bot.send_message(chat_id=group_id,text="Tutti gli abitanti del villaggio sono morti!\nVittoria dei lupi.")
         end_game(bot)
-    else:
-        awakening(bot)
 
 def end_game(bot):
     global player_list
